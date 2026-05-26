@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light dark;
+  }
+
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    @apply font-body antialiased;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Selection inherits the warm accent — works on cream early in the book
+     and stays legible as the page rots toward black. */
+  ::selection {
+    background: rgba(168, 127, 50, 0.28);
+    color: inherit;
+  }
+}
+
+@layer components {
+  /* Prose styling for chapter text — large, literary, breathing */
+  .prose-chapter {
+    @apply font-body text-[1.125rem] leading-[1.75] tracking-[0.005em];
+  }
+
+  .prose-chapter p {
+    @apply mb-6;
+  }
+
+  .prose-chapter em {
+    @apply italic;
+  }
+
+  .prose-chapter hr {
+    @apply my-10 border-0 mx-auto w-16 border-human-line;
+    border-top-width: 0.5px;
+  }
+
+  /* Display lockup styling (used on the cover) */
+  .display-title {
+    @apply font-display font-light tracking-tightest;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Staggered prose reveal — toggled by ProseReveal.tsx via IntersectionObserver */
+.prose-hidden {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.prose-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
