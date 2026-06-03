@@ -352,8 +352,9 @@ function Ch01JosefContent() {
         the anger, some blurred, rambling part of him kept trying to spell the same unbearable
         thing:{' '}
         <span
+          className="copyable-secret"
           aria-label="he still loves her"
-          style={{ filter: 'blur(6px)', opacity: 0.45, display: 'inline-block' }}
+          data-text="he still loves her"
         >
           he still loves her
         </span>

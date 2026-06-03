@@ -589,6 +589,81 @@
 }
 .glitch.shift { animation: gl-shift 8s infinite; }
 
+/* Copyable hidden message: actual text remains selectable, while the
+   duplicated visual layers make the phrase look corrupted. */
+.copyable-secret {
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+  cursor: text;
+  user-select: text;
+  color: rgba(86, 38, 28, 0.55);
+  filter: blur(3.5px);
+  text-shadow:
+    0 0 10px rgba(var(--blood-bright), 0.7),
+    2px 0 rgba(95, 140, 145, 0.55),
+    -2px 0 rgba(var(--blood-bright), 0.55);
+  animation: secret-copy-glitch 1.4s steps(2, end) infinite;
+}
+
+.copyable-secret::before,
+.copyable-secret::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.copyable-secret::before {
+  color: rgba(var(--blood-bright), 0.75);
+  filter: blur(1px);
+  transform: translate(2px, -1px);
+  clip-path: inset(0 0 52% 0);
+  animation: secret-copy-slice-a 1.1s steps(2, end) infinite;
+}
+
+.copyable-secret::after {
+  color: rgba(80, 130, 140, 0.65);
+  filter: blur(1.5px);
+  transform: translate(-3px, 1px);
+  clip-path: inset(48% 0 0 0);
+  animation: secret-copy-slice-b 0.9s steps(2, end) infinite;
+}
+
+@keyframes secret-copy-glitch {
+  0%, 60%, 100% {
+    filter: blur(3.5px);
+    transform: translate(0, 0) skewX(0);
+    opacity: 0.72;
+    letter-spacing: 0.01em;
+  }
+  18% {
+    filter: blur(5px);
+    transform: translate(-1px, 1px) skewX(-2deg);
+    opacity: 0.5;
+    letter-spacing: 0.06em;
+  }
+  34% {
+    filter: blur(2.5px);
+    transform: translate(2px, -1px) skewX(1.5deg);
+    opacity: 0.85;
+    letter-spacing: 0;
+  }
+}
+
+@keyframes secret-copy-slice-a {
+  0%, 55%, 100% { transform: translate(2px, -1px); opacity: 0.35; }
+  20%           { transform: translate(8px, -2px); opacity: 0.95; }
+  36%           { transform: translate(-5px, 0); opacity: 0.7; }
+}
+
+@keyframes secret-copy-slice-b {
+  0%, 50%, 100% { transform: translate(-3px, 1px); opacity: 0.3; }
+  16%           { transform: translate(-9px, 2px); opacity: 0.9; }
+  32%           { transform: translate(6px, -1px); opacity: 0.65; }
+}
+
 /* ---------------------------------------------------------------------------
  * Screen tear — full-viewport overlay above everything. Brief clip-path
  * shift fires at the 90% mark of a 12s loop. Paused until decay >= 0.8.
