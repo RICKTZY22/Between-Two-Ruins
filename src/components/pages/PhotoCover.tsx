@@ -10,13 +10,13 @@ import { Link } from 'react-router-dom';
  * smear/scanlines, and a torn bone-white band carrying a heavy distressed
  * title.
  *
- * The artwork is loaded from `public/cover-art.jpg`. Drop your own image at
+ * The artwork is loaded from `public/cover-art.png`. Drop your own image at
  * that path and it appears automatically — no code change needed. Until then
  * a styled placeholder stands in.
  * ------------------------------------------------------------------------- */
 
 /** Replace this file in /public to swap the cover art. */
-const COVER_IMG = '/cover-art.jpg';
+const COVER_IMG = '/cover-art.png';
 
 const EASE = [0.33, 1, 0.68, 1] as const;
 
@@ -77,7 +77,7 @@ export default function PhotoCover() {
                 <div style={{ fontSize: '2.4rem', marginBottom: '1rem', opacity: 0.5 }}>▢</div>
                 <div style={{ fontSize: '0.72rem' }}>Cover image placeholder</div>
                 <div style={{ fontSize: '0.58rem', opacity: 0.6, marginTop: '0.6rem' }}>
-                  drop your art at public/cover-art.jpg
+                  drop your art at public/cover-art.png
                 </div>
               </div>
             </div>
@@ -196,7 +196,11 @@ export default function PhotoCover() {
             >
               Between
               <br />
-              Two Ruins
+              <span>Two</span>
+              <span aria-hidden style={{ marginLeft: '0.28em' }}>
+                Ruins
+              </span>
+              <span className="sr-only"> Ruins</span>
             </motion.h1>
           </div>
 
