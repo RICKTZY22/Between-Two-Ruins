@@ -1,11 +1,14 @@
 import type { Chapter } from '@/types';
-import Anchor from '@/components/reader/Anchor';
+import BloodWord from '@/components/reader/BloodWord';
+import GlitchLine from '@/components/reader/GlitchLine';
 
 function Ch01JosefContent() {
   return (
     <>
       <p className="text-center italic text-[1.0625rem] mb-12">
-        Some ghosts are born from loss. Others from the things we cannot forgive.
+        <GlitchLine type="chromatic" delay={-1.3}>
+          Some ghosts are born from loss. Others from the things we cannot forgive.
+        </GlitchLine>
       </p>
       <hr />
 
@@ -33,15 +36,25 @@ function Ch01JosefContent() {
       </p>
 
       <p>
-        It was not a remarkable place. Josef was not a remarkable person. He would have said so
-        himself, plainly, without embarrassment. He was twenty-eight years old. He rented a room
-        twenty minutes away. He had three friends, or two, depending on the month. He preferred
-        silence to small talk, windows to walls, and night shifts to mornings because at night the
-        world had the decency to be a little quieter.
+        It was not a remarkable place. Josef was the kind of man you look at once and don&rsquo;t
+        think about again. He would have said so himself. Not with self-pity, just with the flat
+        accuracy of someone who has been measured by the world and found ordinary and made peace
+        with it. He was twenty-eight years old. He rented a room twenty minutes away. He had three
+        friends, or two, depending on the month. He preferred silence to small talk, windows to
+        walls, and night shifts to mornings because at night the world had the decency to be a
+        little quieter.
+      </p>
+
+      <p>He had a wife.</p>
+
+      <p>
+        Her name was <BloodWord>Reyna</BloodWord>. He still used the present tense when he thought
+        of her, though he wasn&rsquo;t sure anymore whether that was love or habit or something he
+        didn&rsquo;t have a clean word for.
       </p>
 
       <p>
-        <Anchor inner="[placeholder]">He was not unhappy</Anchor>. That was the part people always got wrong about men like Josef. They
+        He was not unhappy. That was the part people always got wrong about men like Josef. They
         saw the quietness and assumed the worst: depression, damage, some wound leaking under the
         surface. But Josef was not unhappy. He was simply <em>contained.</em> There was a
         difference, though he could not have put it into words, not then, not yet.
@@ -58,11 +71,16 @@ function Ch01JosefContent() {
       <p>The woman at table seven had been crying.</p>
 
       <p>
-        Josef noticed the way he noticed most things. Not loudly, not with any visible reaction,
-        just a small adjustment in his chest, like a door shifting in its frame. She was maybe
-        forty, wearing the kind of blazer that meant she had come from a meeting. Her food sat
-        untouched. She was staring at her phone the way people stare at a message they have read
-        thirty times hoping it will change.
+        She was young, early twenties, wearing the kind of blazer that meant she had come from a
+        meeting. Her food sat untouched. She was staring at her phone the way people stare at a
+        message they have read thirty times hoping it will change.
+      </p>
+
+      <p>
+        Josef noticed her the moment she sat down. Not because of the crying. Because of the way she
+        was holding herself: arms crossed tight over her chest, shoulders drawn inward, chin
+        slightly lifted. The posture of someone bracing. Someone who had learned that the next thing
+        coming was usually worse than the last.
       </p>
 
       <p>
@@ -81,131 +99,21 @@ function Ch01JosefContent() {
 
       <p>
         The table beside her went quiet for half a second. Someone looked. Josef did not react. He
-        did not flush or flinch or apologize in the stumbling way that would have made it worse. He
-        simply nodded once, said <em>of course,</em> and moved on.
+        did not flush or flinch. He simply nodded once, said <em>of course,</em> and moved on.
+      </p>
+
+      <p>He was three steps away when it hit him.</p>
+
+      <p>
+        The way she had looked up. The specific sharpness of it. Not anger exactly. More like
+        someone who had been asked one too many times how they were doing and finally broke. He knew
+        that look. He had been on the receiving end of it in a different kitchen, in a different
+        life, standing in the doorway of his own home with a glass of water he had brought for her,
+        asking if she needed anything.
       </p>
 
       <p>
-        He was not offended. He understood, in the wordless way he understood most things, that the
-        woman was not talking to him. She was talking to the phone, to whoever had sent that
-        message, to the specific exhaustion of a person who has been holding it together in public
-        for too long and finally, carelessly, drops it. He had just been the nearest surface.
-      </p>
-
-      <p>
-        Grief did that. It turned people outward like an open wound. Everything that touched it,
-        even softly, became pain.
-      </p>
-
-      <p>
-        At table three, a group of college friends had cornered one of their own. Josef had been
-        watching it without meaning to. There were four of them and then there was the fifth,
-        quieter than the rest, sitting slightly outside the circle of the conversation, the way a
-        person sits when they have learned that the edge is safer than the middle. The others were
-        laughing at something he had said, or the way he had said it, the kind of laughing that is
-        shaped like a joke but lands like a verdict. <em>Weird,</em> one of them said, grinning.{' '}
-        <em>Grabe ka talaga.</em> The fifth one smiled along. Josef recognized that smile. It was
-        the smile of someone who had decided that being laughed at by people you love is still
-        better than being left out entirely. The others did not notice. They never did. They were
-        too busy being the main characters of the story to wonder how it felt to be written in as
-        the punchline.
-      </p>
-
-      <p>
-        At the counter, an old man ordered the same meal he had ordered every Tuesday for as long
-        as Josef had been working here. Double patty, no pickles, extra ketchup on the side. Josef
-        had it ready before the man finished speaking. The old man laughed his surprised laugh, the
-        same one every Tuesday, and said <em>ay, you remembered</em> with such genuine delight that
-        it seemed almost impossible. That a thing so small, so utterly unremarkable, could produce
-        that much light in a person's face. Josef had seen customers berate the staff over a wrong
-        sauce. Had seen people leave without a word, tray abandoned, as though the food had
-        materialized by itself. Gratitude, he had learned, was not proportional to what you
-        received. It was proportional to how much of yourself you still had left.
-      </p>
-
-      <p>
-        Josef <Anchor inner="[placeholder]">almost smiled</Anchor>.
-      </p>
-
-      <p>
-        <em>Almost.</em>
-      </p>
-
-      <p>
-        He watched people the way a man watches water. Not to control it, just to read it. The
-        woman at table seven had grief on her. Not the fresh kind that spills out loud and ugly.
-        The other kind. The kind that has gone quiet. The kind that has found a permanent address
-        somewhere in your chest.
-      </p>
-
-      <p>
-        <Anchor inner="[placeholder]">He knew that address well</Anchor>.
-      </p>
-
-      <p>
-        The boys at table three and their need to be the <em>bida,</em> the hero, the one the story
-        was about, and the quiet violence of what that cost the ones around them, the ones who got
-        smaller so others could seem larger. The old man and his Tuesday meal and his capacity,
-        rare and worth noting, to be genuinely glad for something that asked nothing of him.
-      </p>
-
-      <p>He felt all of it. He simply kept it on the other side of the glass.</p>
-
-      <p>
-        He had become very good at this. Standing close enough to help. Far enough away that it
-        could not reach him.
-      </p>
-
-      <p>This was the arrangement. Josef observed. Josef helped when he could. Josef did not spill over.</p>
-
-      <p>
-        He did not remember making the arrangement. He just knew it had been made. In the same
-        quiet way you know a house has settled, by the doors that no longer close right, by the
-        cracks along the ceiling you have stopped seeing because they have always been there.
-      </p>
-
-      <hr />
-
-      <p>The girl came in around two-thirty.</p>
-
-      <p>
-        She was young, early twenties maybe, and Josef noticed her before she reached the counter
-        because she was talking to herself in that particular way. Not the absent murmur of someone
-        on a call, but something faster, more internal, the words tumbling over each other like
-        they were trying to outrun something. Her hands were moving. She kept touching her own
-        arms, crossing and uncrossing them.
-      </p>
-
-      <p>
-        She ordered. Repeated the order. Ordered something different. Apologized and ordered the
-        first thing again.
-      </p>
-
-      <p>Renz, the new cashier, glanced at Josef with a look that said <em>help.</em></p>
-
-      <p>
-        Josef stepped forward. He kept his voice level, unhurried, the tone he used for situations
-        like this. <em>No problem. Take your time.</em> He said it without any of the strained
-        patience that makes people feel like a problem. He said it like he meant it, and he did
-        mean it, and he handed her a number card and told her to find a seat and they would bring
-        it out to her.
-      </p>
-
-      <p>
-        She looked at him. Her eyes were bright in that exhausted, overstimulated way. The eyes of
-        someone whose mind never quite stopped. She said <em>sorry</em> twice more and went to find
-        a table by the wall.
-      </p>
-
-      <p>He watched her go.</p>
-
-      <p>And then, before he could stop it, before the glass could come back up:</p>
-
-      <p>
-        <em>
-          Kuya, I&rsquo;m sorry. I don&rsquo;t know why I said those things. I didn&rsquo;t mean
-          them. You know I didn&rsquo;t mean them. You&rsquo;re the only one who actually&mdash;
-        </em>
+        <em>Why are you looking at me like that. Stop looking at me like that.</em>
       </p>
 
       <p>
@@ -213,146 +121,180 @@ function Ch01JosefContent() {
         passed.
       </p>
 
-      <p>Reyna. His sister&rsquo;s name was Reyna.</p>
-
       <p>
-        <em>Was.</em>
+        There was something he did not let himself think about in full. A shape in the back of his
+        mind that he kept covered, the way you throw a cloth over something broken that you
+        don&rsquo;t have the energy to throw away. When things like this happened, a gesture, a
+        tone, a particular quality of anger in a stranger&rsquo;s voice, the cloth shifted. He could
+        see the outline of it.
       </p>
 
-      <p>He turned back to the fryer. The clatter resumed. He resumed with it.</p>
+      <p>He moved back to the fryer. He did not look at table seven again.</p>
+
+      <hr />
+
+      <p>At table three, a group of college friends had cornered one of their own.</p>
+
+      <p>
+        Four of them, and then the fifth, sitting slightly outside the circle, the way a person sits
+        when they have learned that the edge is safer than the middle. Josef had been that person
+        once. Not at a table like this, not exactly, but close enough that the shape of it was
+        familiar in his body before his mind caught up.
+      </p>
+
+      <p>
+        He had been the quiet one. The weird one. The one whose lunch was eaten by someone who
+        thought it was funny, who laughed and said <em>ay, joke lang,</em> and who everyone agreed
+        was actually funny because it was easier than not agreeing. He had learned early that making
+        himself smaller was a form of armor. That if you gave people less of you to aim at, they had
+        less to hit.
+      </p>
+
+      <p>He still lived that way. He suspected he always would.</p>
+
+      <p>
+        The others were laughing at something the fifth one had said. The kind of laughing that is
+        shaped like a joke but lands like a verdict. <em>Weird,</em> one of them said, grinning.{' '}
+        <em>Grabe ka talaga.</em> The fifth one smiled along. Josef recognized that smile. The smile
+        of someone who had decided that being laughed at by the people you love is still better than
+        not being let in at all.
+      </p>
+
+      <p>He turned away before he could watch any more of it.</p>
 
       <hr />
 
       <p>
-        Memory did not ask permission. It arrived the way weather arrives, the way a smell can drag
-        you backward through years in the space between one breath and the next. He had learned not
-        to fight it. Fighting it only made it louder. The trick was to let it come, let it break
-        like a wave against the boards, and wait for it to recede.
-      </p>
-
-      <p>The trick was to keep moving while it did.</p>
-
-      <p>
-        He had known, even before the end, that something was wrong with Reyna in a way that did
-        not have a clean name. The illness came and went like a tide. Some weeks she was the
-        sister he had grown up with. Sharp, funny, the kind of person who remembered the exact
-        detail that made you feel seen. Other weeks she was someone else entirely. Someone who
-        said things designed to find the wound, who could strip the skin off a person with four
-        words and then call an hour later asking if he wanted to go for merienda, voice soft and
-        needy, as though the cruelty had never happened, as though she genuinely did not remember.
-      </p>
-
-      <p>He had learned not to fight that either.</p>
-
-      <p>
-        What he had not expected was the exhaustion. Not his own, though that was there too,
-        grinding and slow. It was the family&rsquo;s. The way the house rearranged itself around
-        Reyna&rsquo;s cycles. How every conversation became about managing her, monitoring her,
-        anticipating her. How his parents looked at Josef sometimes with relief, because he was
-        the easy one, because he did not require anything, because he had learned to take up very
-        little space. He had made himself small and they had been grateful for it and he had hated
-        them a little for being grateful, and then hated himself for the hatred, and then folded
-        it all down and said <em>I&rsquo;m fine</em> when they asked, which they asked less and
-        less as the years went on.
+        <em>&ldquo;Hoy.&rdquo;</em>
       </p>
 
       <p>
-        He understood this about himself: he was the kind of person who was loved most when he was
-        useful.
-      </p>
-
-      <hr />
-
-      <p>He did not let himself think about the last night very often.</p>
-
-      <p>
-        When it surfaced, and it did, in the small hours, in the moments between sleeping and not,
-        he experienced it less as a memory and more as a physical fact. A heaviness across the
-        chest. A specific quality of silence.
-      </p>
-
-      <p>He remembered standing in the doorway.</p>
-
-      <p>He remembered the sound of her breathing, which was wrong.</p>
-
-      <p>
-        He remembered holding his phone. The screen lit. The emergency number already there,
-        already ready, waiting only for his thumb to press down.
-      </p>
-
-      <p>He remembered not pressing it.</p>
-
-      <p>
-        He could not tell you why. Even now, nearly four years later, he could not give it a clean
-        answer. The mind protects itself by blurring the edges of its worst moments and he had let
-        his blur, had let the <em>why</em> stay murky and unexamined, because to examine it
-        clearly would require looking at the parts of himself he had agreed, very firmly, not to
-        look at.
-      </p>
-
-      <p>There was the version that felt like shock. The body frozen, the mind simply failing to act.</p>
-
-      <p>
-        There was the version that felt like exhaustion. The accumulated weight of years finally
-        making him still.
+        Mang Carding leaned against the counter, arms folded, and gave Josef the look he always gave
+        him. The one that said <em>I see you</em> in a way that Josef had never quite figured out
+        how to deflect.
       </p>
 
       <p>
-        There was the version he never said out loud: that somewhere beneath the grief and the
-        love and the helplessness, there had been something else. Small. Ugly. The relief of
-        someone who has been slowly drowning and has finally, without meaning to, let go.
-      </p>
-
-      <p>He did not know which version was true. He suspected they all were.</p>
-
-      <p>He suspected that was what made him what he was.</p>
-
-      <hr />
-
-      <p>It was near the end of his shift when the family came in.</p>
-
-      <p>
-        A young couple and a small girl, maybe five, wearing a dress with yellow flowers on it.
-        The girl immediately ran to the window and pressed her nose flat against it, watching the
-        traffic outside with pure animal joy.
+        He was not technically a regular. He was something closer to a fixture. Had been coming to
+        Burger Stop every Tuesday since before Josef started, ordered the same thing every time
+        without fail: double patty, no pickles, extra ketchup on the side. At some point in the
+        first few months he had simply decided that he and Josef were friends. Josef had never
+        agreed to this out loud. It had happened anyway.
       </p>
 
       <p>
-        The couple looked tired in the way young parents look tired, which is to say they looked
-        like people who had chosen their exhaustion and still chose it every day. They ordered.
-        They found a table. The woman reached across and tucked a strand of hair behind her
-        husband&rsquo;s ear without thinking about it, the gesture so small and so natural that
-        Josef nearly looked away.
+        <em>&ldquo;Double patty,&rdquo;</em> Josef said, already moving.{' '}
+        <em>&ldquo;Walang pickles.&rdquo;</em>
       </p>
 
-      <p>He didn&rsquo;t.</p>
-
       <p>
-        He stood at the counter with a tray in his hand and watched the three of them for a moment
-        longer than was professional. The girl had abandoned the window and was now demanding
-        something, pointing furiously at the menu board, and the couple were laughing with her,
-        and it was such an ordinary, inconsequential moment of ordinary, inconsequential love that
-        Josef felt something shift very slightly inside him.
+        <em>&ldquo;Extra ketchup.&rdquo;</em>
       </p>
 
-      <p>Not pain. Or not only pain.</p>
-
       <p>
-        More like the feeling of pressing on a bruise that has mostly healed. The discovery that
-        it is still there. That something, not nothing, remains.
+        <em>&ldquo;Sa gilid.&rdquo;</em>
       </p>
 
-      <p>He turned away before any of it reached his face.</p>
-
       <p>
-        The fryer screamed. The door opened. Three more customers flooded in with the smell of
-        exhaust and the hot flat weight of the late afternoon sun.
+        Mang Carding laughed his usual laugh and settled onto the stool at the counter.{' '}
+        <em>&ldquo;You know, other people have to actually say what they want.&rdquo;</em>
       </p>
 
-      <p>Josef moved. Hands working. Eyes down.</p>
+      <p>
+        <em>&ldquo;You&rsquo;re not other people.&rdquo;</em>
+      </p>
 
       <p>
-        <em>The work was simple and the simplicity was the point.</em>
+        <em>&ldquo;Ay, sweet mo naman.&rdquo;</em> He watched Josef work for a moment.{' '}
+        <em>&ldquo;You&rsquo;re doing it again.&rdquo;</em>
+      </p>
+
+      <p>
+        <em>&ldquo;Doing what.&rdquo;</em>
+      </p>
+
+      <p>
+        <em>&ldquo;Yung mukha mo. Parang kuago ka na naman, mulat na mulat na mata mo ha.&rdquo;</em>
+      </p>
+
+      <p>Josef didn&rsquo;t answer. He slid the tray across the counter.</p>
+
+      <p>
+        <em>&ldquo;Kumusta na si Reyna?&rdquo;</em>
+      </p>
+
+      <p>
+        The question landed the way it always landed. Not painfully, exactly, but with weight. The
+        way a hand on a bruise feels.
+      </p>
+
+      <p>
+        <em>
+          <GlitchLine type="ghost" force delay={-0.6}>
+            &ldquo;Discharged na siya,&rdquo;
+          </GlitchLine>
+        </em>{' '}
+        Josef said.{' '}
+        <em>
+          <GlitchLine type="ghost" force delay={-2.4}>
+            &ldquo;Yung hospital. Sabi nila wala na silang magagawa.&rdquo;
+          </GlitchLine>
+        </em>
+      </p>
+
+      <p>
+        <em>
+          <GlitchLine type="ghost" force delay={-1.3}>
+            &ldquo;Kailan pa?&rdquo;
+          </GlitchLine>
+        </em>
+      </p>
+
+      <p>
+        <em>
+          <GlitchLine type="ghost" force delay={-3.1}>
+            &ldquo;Tatlong linggo na.&rdquo;
+          </GlitchLine>
+        </em>
+      </p>
+
+      <p>
+        Mang Carding was quiet. He picked up his tray and ate a few fries without saying anything.
+        Then, the way he sometimes did when he sensed Josef needed a door out of something, he
+        changed the subject entirely.
+      </p>
+
+      <p>
+        <em>&ldquo;Alam mo, parang kahapon lang. Puro kayo travel noon no? Ikaw at si Reyna.&rdquo;</em>
+      </p>
+
+      <p>Josef almost smiled.</p>
+
+      <p>
+        He thought about Reyna before the diagnosis. Before the disease had taken something from her
+        and replaced it with something else, something that wasn&rsquo;t her and wasn&rsquo;t fair
+        and wasn&rsquo;t anyone&rsquo;s fault and still happened. He thought about the version of her
+        that used to steal the blanket and pretend to be asleep when he tried to take it back. Who
+        laughed too loudly in movie theaters and didn&rsquo;t care. Who used to leave him notes in
+        the kitchen written in the margins of receipts because she could never find actual paper.
+      </p>
+
+      <p>
+        <em>
+          Bumili ka ng suka. I love you. Forever and ever wag mo kakalimutan bumili ng suka ha.
+        </em>
+      </p>
+
+      <p>
+        <em>&ldquo;Masaya kami noon, Mang Carding,&rdquo;</em> he said.
+      </p>
+
+      <p>It came out quieter than he intended.</p>
+
+      <p>
+        Mang Carding nodded once. He didn&rsquo;t say anything else, which was the right thing to
+        do, and he knew it was the right thing to do, which was why Josef had let him be a fixture
+        all these years.
       </p>
 
       <hr />
@@ -372,52 +314,70 @@ function Ch01JosefContent() {
       </p>
 
       <p>
-        He thought about the girl with the yellow dress. He thought about the woman at table seven
-        who had cried. He thought about the girl who came in at two-thirty, the way her hands
-        moved, the apologies stacked like bricks.
-      </p>
-
-      <p>He thought about Reyna.</p>
-
-      <p>
-        He thought:{' '}
-        <em>
-          <Anchor inner="[placeholder]">I am a good person</Anchor>.
-        </em>
+        And then, because the night was quiet and he had no noise to hide behind, the thoughts came.
       </p>
 
       <p>
-        He thought it the way he always thought it. Not with certainty, but with effort. The way
-        you hold a door shut against a wind you cannot see.
+        He remembered the last time she had thrown him out of the room. Not figuratively. Literally.
+        Screaming at him to get out, that she didn&rsquo;t want to see his face, that he made
+        everything worse by being there. He had been holding a damp towel. He had just wanted to
+        help with the fever. He stood in the hallway for twenty minutes, towel in hand, listening to
+        the silence after the door slammed, and felt something he was not proud of. Something small
+        and ugly that he had folded away and refused to name.
       </p>
 
       <p>
-        He went home. He made rice because it was what he had. He sat by the window and ate alone
-        and watched the street below and did not feel anything in particular, because feeling
-        things in particular was a door he kept very carefully shut.
+        He remembered losing his job. Not dramatically. Just quietly, the way things fall apart when
+        you stop being present enough to hold them together. Too many absences. Too many half-days.
+        His supervisor had been kind about it, which almost made it worse.
       </p>
 
-      <p>Small life. Small room. Small, manageable portions of the world let in at a time.</p>
+      <p>He remembered the last time he had slept a full night. He couldn&rsquo;t.</p>
 
       <p>
-        He had made it this way on purpose. Because the alternative, the wide open, fully feeling
-        version of Josef Antonio de Luna, was not someone he trusted. Was not someone he was sure
-        was good.
+        He had stopped going to the gym, stopped seeing the two friends who were still around,
+        stopped eating properly, stopped reading, stopped being a person with preferences and habits
+        and a life that belonged to him. He had poured all of it into her and she had needed all of
+        it and then more. There was a version of him that understood this, that knew the disease was
+        not her fault, that knew the person screaming at him was not really Reyna. And there was
+        another version, smaller and more honest, that was simply exhausted. That had lost things he
+        did not know how to grieve because he was not allowed to grieve them. That had looked at his
+        own body in the mirror one morning and not recognized it. Not because it had changed so
+        much. Because he had stopped caring whether it changed.
       </p>
 
-      <p>The light through the window shifted.</p>
-
       <p>
-        Somewhere very far away, in a place with no name he had any word for, something moved in
-        the dark. Something that had his face and none of his apologies. Something that had looked
-        at the same door Josef kept shut and had, long ago, simply walked through it and never
-        come back.
+        There were things a man was not supposed to admit, even to himself. That watching her suffer
+        was agony. That caring for her was sometimes worse. That there were nights he stood outside
+        her room in the dark, his hand resting on the door, and did not open it. He told himself it
+        was so she could sleep. This was the part he kept deepest under the cloth. Not because he
+        didn&rsquo;t love her. He did.
       </p>
 
-      <p>Josef didn&rsquo;t feel it.</p>
+      <p>He was almost certain he still did.</p>
+
+      <p>He was not a bad person.</p>
+
+      <p>He thought this the way he always thought it. Not with certainty, but with effort.</p>
 
       <p>
-        <em>Not yet.</em>
+        He went home. He cooked his rice. He sat at the small table by the window and ate alone in
+        the silence of a house that had become something other than a home.
+      </p>
+
+      <p>
+        Through the wall, faintly, the soft mechanical rhythm of the oxygen machine in the next
+        room.
+      </p>
+
+      <p>He finished his rice.</p>
+
+      <p>He washed the bowl.</p>
+
+      <hr />
+
+      <p>
+        <em>End of Chapter One</em>
       </p>
     </>
   );

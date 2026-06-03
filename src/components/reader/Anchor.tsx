@@ -1,46 +1,50 @@
-import { useId, useState } from 'react';
-import type { ReactNode } from 'react';
+import { useId, useState, type ReactNode, type MouseEvent } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 interface AnchorProps {
-  /** The visible surface phrase, inline in the prose. */
   children: ReactNode;
-  /** The hidden inner thought revealed beneath the phrase. */
   inner: ReactNode;
 }
 
 /**
- * Inline reveal — a surface phrase the reader can tap to expose the
- * character's hidden inner thought. Marginalia in feel: italic, dimmed, with
- * a thin accent line on the left.
+ * Inline reveal — a surface phrase the reader taps to expose the
+ * character's hidden inner thought. Marginalia in feel.
  *
- * Implementation notes:
- *  - The button is a phrasing-content `<button>` so it's safe inside `<p>`.
- *  - The reveal is a `<motion.span>` with `display: block` so it wraps onto
- *    its own line while remaining a valid descendant of `<p>`.
- *  - State is local. Multiple anchors can be open simultaneously. It does
- *    NOT persist across reloads or chapter changes.
+ * On open: spawns a blood-tinted ripple at the click coordinates and a
+ * decay-spike overlay across the viewport, both via brief CSS animations.
+ * The animations are removed from the DOM after they finish, so memory
+ * stays bounded even if the reader keeps opening anchors.
  */
 export default function Anchor({ children, inner }: AnchorProps) {
   const [open, setOpen] = useState(false);
   const id = useId();
 
+  function handleClick(e: MouseEvent<HTMLButtonElement>) {
+    const willOpen = !open;
+    setOpen(willOpen);
+    if (willOpen) spawnEffects(e.clientX, e.clientY);
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLButtonElement>) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    // The button's native click handler covers mouse; we only need this for
+    // keyboard activation so the ripple has sane coordinates (center of the
+    // button rect).
+    if (!open) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      spawnEffects(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    }
+  }
+
   return (
     <>
       <button
         type="button"
-        onClick={() => setOpen((o) => !o)}
+        onClick={handleClick}
+        onKeyDown={handleKeyDown}
         aria-expanded={open}
         aria-controls={id}
-        className={
-          'group cursor-pointer bg-transparent p-0 m-0 font-inherit text-inherit ' +
-          'border-0 border-b border-dotted align-baseline ' +
-          'transition-[border-color,border-style] duration-200 ' +
-          (open
-            ? 'border-solid border-human-accent/90 '
-            : 'border-human-accent/25 hover:border-solid hover:border-human-accent/90 ')
-        }
-        style={{ font: 'inherit', color: 'inherit' }}
+        className="anchor-trigger"
       >
         {children}
       </button>
@@ -49,32 +53,11 @@ export default function Anchor({ children, inner }: AnchorProps) {
           <motion.span
             id={id}
             key="reveal"
-            variants={{
-              open: {
-                height: 'auto',
-                opacity: 0.7,
-                transition: {
-                  // Opens heavy and reluctant — like cracking a wax seal.
-                  height: { type: 'spring', stiffness: 280, damping: 24, mass: 0.8, restDelta: 0.001 },
-                  // Text seeps in slightly after the space opens.
-                  opacity: { duration: 0.35, ease: 'easeIn' },
-                },
-              },
-              closed: {
-                height: 0,
-                opacity: 0,
-                transition: {
-                  // Snaps shut decisively — closing feels final.
-                  height: { type: 'spring', stiffness: 340, damping: 32 },
-                  opacity: { duration: 0.15, ease: 'easeOut' },
-                },
-              },
-            }}
-            initial="closed"
-            animate="open"
-            exit="closed"
-            className="block italic text-[0.95em] my-3 pl-4 border-l-2 border-human-accent/40"
-            style={{ overflow: 'hidden' }}
+            initial={{ maxHeight: 0, opacity: 0 }}
+            animate={{ maxHeight: 200, opacity: 1 }}
+            exit={{ maxHeight: 0, opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="anchor-reveal"
           >
             {inner}
           </motion.span>
@@ -82,4 +65,24 @@ export default function Anchor({ children, inner }: AnchorProps) {
       </AnimatePresence>
     </>
   );
+}
+
+/** Spawn the ripple + decay-spike overlays at the given viewport coords. */
+function spawnEffects(x: number, y: number) {
+  // Ripple — radial gradient, 200×200, scale 0 → 1, opacity 1 → 0 over 700ms.
+  const ripple = document.createElement('div');
+  ripple.className = 'anchor-ripple';
+  ripple.style.left = `${x}px`;
+  ripple.style.top = `${y}px`;
+  document.body.appendChild(ripple);
+  ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
+  // Safety net in case animationend is missed (e.g., tab backgrounded).
+  setTimeout(() => ripple.remove(), 1200);
+
+  // Decay spike — viewport-wide blood-tinted veil, 2s, opacity 0→1→0.
+  const spike = document.createElement('div');
+  spike.className = 'anchor-spike';
+  document.body.appendChild(spike);
+  spike.addEventListener('animationend', () => spike.remove(), { once: true });
+  setTimeout(() => spike.remove(), 2500);
 }

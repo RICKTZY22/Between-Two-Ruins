@@ -8,9 +8,21 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!--
+      display=optional: if the font hasn't loaded within ~100ms the browser
+      keeps the fallback for the rest of the page session. This eliminates
+      FOUT-driven CLS (was the 1.68 culprit). The fallbacks defined in
+      globals.css have size-adjust + ascent-override to match the real font
+      metrics, so even when the real font never arrives, layout is stable.
+    -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,30..100&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Inter+Tight:wght@400..600&display=swap"
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,30..100&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Inter+Tight:wght@400..600&display=optional"
+    />
+    <link
       rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,30..100&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Inter+Tight:wght@400..600&display=optional"
     />
 
     <title>Between Two Ruins</title>

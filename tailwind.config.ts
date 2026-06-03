@@ -25,9 +25,12 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ['"Fraunces"', 'Georgia', 'serif'],
-        body: ['"Cormorant Garamond"', 'Georgia', 'serif'],
-        ui: ['"Inter Tight"', 'system-ui', 'sans-serif'],
+        // Each stack puts the metric-matched fallback (defined in globals.css
+        // via size-adjust) BEFORE the system fonts, so layout stays stable
+        // even when display=optional refuses to load the real font.
+        display: ['"Fraunces"', '"Fraunces Fallback"', 'Georgia', 'serif'],
+        body: ['"Cormorant Garamond"', '"Cormorant Fallback"', 'Georgia', 'serif'],
+        ui: ['"Inter Tight"', '"Inter Tight Fallback"', 'system-ui', 'sans-serif'],
       },
       letterSpacing: {
         tightest: '-0.04em',

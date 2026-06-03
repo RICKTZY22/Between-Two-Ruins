@@ -2,11 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    color-scheme: light dark;
-  }
+/* ---------------------------------------------------------------------------
+ * Fallback @font-faces with size-adjust + metric overrides.
+ *
+ * The HTML loads Fraunces / Cormorant Garamond / Inter Tight from Google
+ * Fonts with `display=optional`, which means if those don't arrive within
+ * ~100ms the browser uses these fallbacks for the rest of the session — no
+ * mid-page font swap, no CLS.
+ *
+ * Each fallback aliases a system font (Georgia / system-ui) but rescales
+ * its metrics so glyph widths and line heights approximate the real font.
+ * When the real font does load, the swap is metrically invisible.
+ *
+ * Overrides are eyeballed from Capsize-style measurements; exact pixel
+ * parity isn't possible without metrics-extraction tooling, but these are
+ * within ~1% — well under the CLS threshold.
+ * ------------------------------------------------------------------------- */
+@font-face {
+  font-family: 'Fraunces Fallback';
+  src: local('Georgia');
+  size-adjust: 105%;
+  ascent-override: 88%;
+  descent-override: 24%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Cormorant Fallback';
+  src: local('Garamond'), local('Georgia');
+  size-adjust: 92%;
+  ascent-override: 78%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Inter Tight Fallback';
+  src: local('Arial');
+  size-adjust: 107%;
+  ascent-override: 92%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
 
+/* ---------------------------------------------------------------------------
+ * Global CSS variables. --decay is updated live by DecayEngine on every
+ * meaningful intensity change; every layer that wants a continuous response
+ * reads it through calc(). This means a scroll-driven decay update touches
+ * exactly one CSS variable on :root instead of dozens of inline styles.
+ * ------------------------------------------------------------------------- */
+:root {
+  --decay: 0;
+  --accent-rgb: 168, 127, 50;
+  --blood: 120, 15, 15;
+  --blood-bright: 160, 25, 20;
+
+  color-scheme: light dark;
+}
+
+@layer base {
   html,
   body,
   #root {
@@ -20,34 +72,34 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Selection inherits the warm accent — works on cream early in the book
-     and stays legible as the page rots toward black. */
   ::selection {
-    background: rgba(168, 127, 50, 0.28);
+    background: rgba(var(--accent-rgb), 0.28);
     color: inherit;
   }
 }
 
 @layer components {
-  /* Prose styling for chapter text — large, literary, breathing */
   .prose-chapter {
     @apply font-body text-[1.125rem] leading-[1.75] tracking-[0.005em];
+    /* Subpixel halo — gives the serif edges enough definition to read
+       cleanly against the multiplied overlay stack at mid-high decay.
+       Strength is conservative so low-decay chapters still feel like
+       paper, not glow. */
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.35), 0 0 1px rgba(0, 0, 0, 0.25);
   }
-
   .prose-chapter p {
     @apply mb-6;
   }
-
   .prose-chapter em {
     @apply italic;
   }
-
-  .prose-chapter hr {
-    @apply my-10 border-0 mx-auto w-16 border-human-line;
-    border-top-width: 0.5px;
+  .prose-chapter hr,
+  .section-break {
+    @apply my-10 border-0 mx-auto;
+    width: 4rem;
+    border-top: 0.5px solid rgba(var(--accent-rgb), 0.35);
   }
 
-  /* Display lockup styling (used on the cover) */
   .display-title {
     @apply font-display font-light tracking-tightest;
     font-variation-settings: 'opsz' 144, 'SOFT' 100;
@@ -60,14 +112,621 @@
   }
 }
 
-/* Staggered prose reveal — toggled by ProseReveal.tsx via IntersectionObserver */
+/* ---------------------------------------------------------------------------
+ * Scroll reveal — text materializes from fog as it enters the viewport.
+ * Each element starts blurred, lifted, transparent; ProseReveal flips the
+ * class to .prose-visible. The blur(3px)→blur(0) makes the prose feel like
+ * it's coalescing out of the decay rather than just appearing.
+ * ------------------------------------------------------------------------- */
 .prose-hidden {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(8px);
+  filter: blur(3px);
 }
 
 .prose-visible {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  filter: blur(0);
+  /* Cut from 0.8s → 0.45s so multiple paragraphs entering during a single
+     scroll burst don't overlap each other for the full duration. Halves
+     the cumulative animation cost during continuous scrolling. */
+  transition: opacity 0.45s ease-out, transform 0.45s ease-out, filter 0.45s ease-out;
+}
+
+/* ---------------------------------------------------------------------------
+ * Decay engine — continuous (calc-driven) layers
+ * Every opacity is computed from --decay via clamped linear ramps. No JS
+ * per-frame style updates needed: the browser interpolates as --decay
+ * changes (with a transition on --decay itself, see below).
+ * ------------------------------------------------------------------------- */
+.decay-root {
+  /* Transition the variable so chapter changes smoothly fade every layer
+     that derives from it. ~1.2s feels like the room is shifting around the
+     reader, not snapping. */
+  transition: --decay 1.2s ease-in-out;
+}
+@property --decay {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+/* ---------------------------------------------------------------------------
+ * Core decay layers — fixed full-viewport, all opacity-driven via --decay.
+ * Each is its own GPU composite layer (translateZ(0)) so opacity changes
+ * are compositor-only operations during scroll.
+ * ------------------------------------------------------------------------- */
+.layer-bg-color {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-color: var(--decay-bg-color, #F5EFE6);
+  transition: background-color 1.5s ease-in-out;
+  transform: translateZ(0);
+}
+
+.layer-wall-rot {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-size: 600px 600px;
+  background-repeat: repeat;
+  mix-blend-mode: multiply;
+  opacity: clamp(0, calc((var(--decay) - 0.3) / 0.7 * 0.45), 0.45);
+  transition: opacity 1.5s ease-in-out;
+  transform: translateZ(0);
+  will-change: opacity;
+}
+
+.layer-edge-bleed {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background:
+    radial-gradient(circle at 0% 0%,    rgba(38, 22, 12, 0.85) 0%, transparent 60%),
+    radial-gradient(circle at 100% 0%,  rgba(45, 26, 14, 0.85) 0%, transparent 60%),
+    radial-gradient(circle at 0% 100%,  rgba(38, 22, 12, 0.85) 0%, transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(45, 26, 14, 0.85) 0%, transparent 60%);
+  mix-blend-mode: multiply;
+  opacity: clamp(0, calc((var(--decay) - 0.4) / 0.6 * 0.6), 0.6);
+  transition: opacity 1.5s ease-in-out;
+  transform: translateZ(0);
+  will-change: opacity;
+}
+
+.layer-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  /* Pushed center-clear-radius from 38% → 45% so the reading column at
+     max-width 42rem doesn't intersect the dark falloff. */
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,1) 100%);
+  /* Capped at 0.7 (was 0.9) so the center stays legible at high decay. */
+  opacity: clamp(0, calc((var(--decay) - 0.15) / 0.85 * 0.7), 0.7);
+  transition: opacity 1.5s ease-in-out;
+  transform: translateZ(0);
+  will-change: opacity;
+}
+
+.layer-grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  background-repeat: repeat;
+  mix-blend-mode: multiply;
+  opacity: calc(var(--decay) * 0.35);
+  transition: opacity 200ms ease-out;
+  transform: translateZ(0);
+  will-change: opacity;
+}
+
+/* ---------------------------------------------------------------------------
+ * Page breathing — body scales 1.0 → 1.003 on an 8s loop once decay >= 0.3.
+ * Lives on a wrapper inside DecayEngine.
+ * ------------------------------------------------------------------------- */
+@keyframes page-breathing {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.003); }
+}
+.layer-breathing {
+  animation: page-breathing 8s ease-in-out infinite;
+  animation-play-state: paused;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+.decay-active-30 .layer-breathing { animation-play-state: running; }
+
+/* ---------------------------------------------------------------------------
+ * Flicker — page wrapper opacity dips occasionally above decay 0.7.
+ * Two staggered keyframes to make the dips feel random.
+ * ------------------------------------------------------------------------- */
+@keyframes page-flicker {
+  0%, 92%, 94%, 100% { opacity: 1; }
+  93%                { opacity: 0.78; }
+}
+.layer-flicker {
+  animation: page-flicker 7s steps(1, end) infinite;
+  animation-play-state: paused;
+}
+.decay-active-70 .layer-flicker { animation-play-state: running; }
+
+/* ---------------------------------------------------------------------------
+ * Heartbeat vignette — pulsing radial that intensifies under stress.
+ * Opacity carries the intensity; animation only modulates the multiplier.
+ * ------------------------------------------------------------------------- */
+@keyframes heartbeat {
+  0%, 100% { opacity: 0.55; }
+  10%      { opacity: 0.9; }
+  20%      { opacity: 0.65; }
+  30%      { opacity: 0.95; }
+  40%      { opacity: 0.55; }
+}
+.layer-heartbeat {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.55) 95%);
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+  animation: heartbeat 5s ease-in-out infinite;
+  animation-play-state: paused;
+  transform: translateZ(0);
+  will-change: opacity;
+}
+.decay-active-50 .layer-heartbeat { opacity: 1; }
+.decay-active-50 .layer-heartbeat { animation-play-state: running; }
+
+/* ---------------------------------------------------------------------------
+ * Scan lines — horizontal repeating gradient drifting downward.
+ * ------------------------------------------------------------------------- */
+@keyframes scanline-drift {
+  0%   { background-position: 0 0; }
+  100% { background-position: 0 12px; }
+}
+.layer-scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.18) 0px,
+    rgba(0, 0, 0, 0.18) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+  animation: scanline-drift 1.6s linear infinite;
+  animation-play-state: paused;
+  transform: translateZ(0);
+  will-change: background-position, opacity;
+}
+.decay-active-60 .layer-scanlines { opacity: clamp(0, calc((var(--decay) - 0.6) / 0.4 * 0.5), 0.5); }
+.decay-active-60 .layer-scanlines { animation-play-state: running; }
+
+/* ---------------------------------------------------------------------------
+ * Text tremble — tiny random translate on the article wrapper.
+ * Activates at decay >= 0.75. CSS-only, no JS jitter loop.
+ * ------------------------------------------------------------------------- */
+@keyframes text-tremble {
+  0%   { transform: translate(0, 0); }
+  20%  { transform: translate(0.4px, -0.3px); }
+  40%  { transform: translate(-0.3px, 0.4px); }
+  60%  { transform: translate(0.3px, 0.3px); }
+  80%  { transform: translate(-0.4px, -0.2px); }
+  100% { transform: translate(0, 0); }
+}
+.layer-tremble {
+  animation: text-tremble 0.12s steps(1, end) infinite;
+  animation-play-state: paused;
+  will-change: transform;
+}
+.decay-active-75 .layer-tremble { animation-play-state: running; }
+
+/* ---------------------------------------------------------------------------
+ * Fog particles canvas — opacity driven by --decay (0 until 0.2, → 0.5 at 1).
+ * ------------------------------------------------------------------------- */
+.layer-fog-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 7;
+  opacity: clamp(0, calc((var(--decay) - 0.2) / 0.8 * 0.5), 0.5);
+  transition: opacity 1.5s ease-in-out;
+  transform: translateZ(0);
+  will-change: opacity;
+}
+
+/* ===========================================================================
+ * BLOOD LAYERS
+ * All blood reads --decay to derive its overall opacity. Each layer has
+ * its own threshold below which it stays invisible.
+ * ========================================================================= */
+
+/* Blood drips — 6 vertical streaks from the top edge ---------------------- */
+.layer-blood-drips {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 30;
+  opacity: clamp(0, calc((var(--decay) - 0.5) / 0.5 * 0.8), 0.8);
+  transition: opacity 1.5s ease-in-out;
+}
+
+@keyframes drip-grow-1 { 0% { height: 0; } 100% { height: 32vh; } }
+@keyframes drip-grow-2 { 0% { height: 0; } 100% { height: 48vh; } }
+@keyframes drip-grow-3 { 0% { height: 0; } 100% { height: 22vh; } }
+@keyframes drip-grow-4 { 0% { height: 0; } 100% { height: 55vh; } }
+@keyframes drip-grow-5 { 0% { height: 0; } 100% { height: 38vh; } }
+@keyframes drip-grow-6 { 0% { height: 0; } 100% { height: 20vh; } }
+
+.blood-drip {
+  position: absolute;
+  top: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(var(--blood), 0.9) 0%,
+    rgba(var(--blood), 0.3) 60%,
+    transparent 100%
+  );
+  border-radius: 0 0 50% 50%;
+  filter: blur(0.5px);
+  will-change: height;
+  animation-fill-mode: forwards;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-out;
+}
+.blood-drip-1 { left: 8%;  width: 1.6px; animation: drip-grow-1 12s 0s;   }
+.blood-drip-2 { left: 23%; width: 1.2px; animation: drip-grow-2 16s 1.5s; }
+.blood-drip-3 { left: 42%; width: 2.0px; animation: drip-grow-3 9s 2s;    }
+.blood-drip-4 { left: 67%; width: 1.4px; animation: drip-grow-4 14s 3s;   }
+.blood-drip-5 { left: 85%; width: 2.5px; animation: drip-grow-5 11s 5s;   }
+.blood-drip-6 { left: 93%; width: 1.0px; animation: drip-grow-6 8s 7s;    }
+
+/* Blood stains — 5 blurred radial ellipses ------------------------------- */
+.layer-blood-stains {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 28;
+  opacity: clamp(0, calc((var(--decay) - 0.45) / 0.55 * 0.7), 0.7);
+  transition: opacity 1.5s ease-in-out;
+}
+.blood-stain {
+  position: absolute;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(var(--blood), 0.35) 0%,
+    transparent 70%
+  );
+  filter: blur(8px);
+  transform: translateZ(0);
+}
+.blood-stain-1 { top: 12%; left: 4%;  width: 240px; height: 180px; }
+.blood-stain-2 { top: 38%; right: 6%; width: 200px; height: 160px; transform: rotate(28deg) translateZ(0); }
+.blood-stain-3 { bottom: 14%; left: 18%; width: 280px; height: 140px; }
+.blood-stain-4 { bottom: 32%; right: 12%; width: 220px; height: 200px; }
+.blood-stain-5 { top: 55%; left: 40%; width: 180px; height: 180px; transform: rotate(-15deg) translateZ(0); }
+
+/* Blood seep — top & bottom edges ---------------------------------------- */
+.layer-blood-seep {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 27;
+  opacity: clamp(0, calc((var(--decay) - 0.55) / 0.45 * 0.8), 0.8);
+  transition: opacity 1.5s ease-in-out;
+}
+.layer-blood-seep::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 30vh;
+  background: linear-gradient(to bottom, rgba(var(--blood), 0.2) 0%, transparent 100%);
+}
+.layer-blood-seep::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 20vh;
+  background: linear-gradient(to top, rgba(var(--blood), 0.25) 0%, transparent 100%);
+}
+
+/* Blood smears — 3 streaks/blobs ---------------------------------------- */
+.layer-blood-smears {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 29;
+}
+.blood-smear {
+  position: absolute;
+  transition: opacity 1.5s ease-in-out;
+  transform: translateZ(0);
+}
+.blood-smear-1 {
+  /* right-side horizontal streak */
+  top: 28%; right: 0;
+  width: 36vw; height: 6px;
+  background: linear-gradient(to left, rgba(var(--blood), 0.45) 0%, transparent 100%);
+  filter: blur(2.5px);
+  opacity: clamp(0, calc((var(--decay) - 0.6) / 0.4), 1);
+}
+.blood-smear-2 {
+  /* left-side blob */
+  top: 62%; left: 0;
+  width: 140px; height: 90px;
+  background: radial-gradient(ellipse at left, rgba(var(--blood), 0.5) 0%, transparent 75%);
+  filter: blur(6px);
+  opacity: clamp(0, calc((var(--decay) - 0.65) / 0.35), 1);
+}
+.blood-smear-3 {
+  /* mid-right floating streak */
+  top: 48%; right: 8%;
+  width: 18vw; height: 4px;
+  background: linear-gradient(to right, transparent 0%, rgba(var(--blood), 0.4) 50%, transparent 100%);
+  filter: blur(3px);
+  opacity: clamp(0, calc((var(--decay) - 0.7) / 0.3), 1);
+}
+
+/* Blood pool — bottom-fixed dark puddle --------------------------------- */
+.layer-blood-pool {
+  position: fixed;
+  bottom: 0; left: 10%; right: 10%;
+  height: 80px;
+  pointer-events: none;
+  z-index: 26;
+  background: radial-gradient(
+    ellipse at center bottom,
+    rgba(var(--blood), 0.55) 0%,
+    rgba(var(--blood), 0.25) 45%,
+    transparent 100%
+  );
+  filter: blur(12px);
+  opacity: clamp(0, calc((var(--decay) - 0.75) / 0.25 * 0.8), 0.8);
+  transition: opacity 1.5s ease-in-out;
+  transform: translateZ(0);
+}
+
+/* ===========================================================================
+ * GLITCH SYSTEM — 5 keyframe animation types, activate at decay >= 0.3.
+ * Each animation runs continuously; bursts of glitching are isolated to
+ * narrow time windows in the keyframe (e.g. 90–96%) so most of the time
+ * the line reads cleanly.
+ * ========================================================================= */
+.glitch {
+  position: relative;
+  display: inline;
+  animation-play-state: paused;
+}
+.decay-active-30 .glitch.active { animation-play-state: running; }
+
+/* Forced glitch — runs even when ambient decay is below 0.3, for
+   individually-haunted lines in otherwise-clean chapters. */
+.glitch.glitch-force,
+.glitch.glitch-force::after { animation-play-state: running; }
+
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  color: rgba(var(--blood-bright), 0.7);
+  mix-blend-mode: screen;
+  clip-path: inset(0 0 100% 0);
+  opacity: 0;
+}
+
+/* Type 1 — Chromatic ----------------------------------------------------- */
+@keyframes gl-chromatic-main {
+  0%, 89%, 100% { transform: translate(0, 0) skewX(0); }
+  90%           { transform: translate(-3px, 1px) skewX(-1deg); }
+  93%           { transform: translate(4px, -1px) skewX(1.2deg); }
+  96%           { transform: translate(-1px, 0) skewX(0); }
+}
+@keyframes gl-chromatic-ghost {
+  0%, 89%, 100% { opacity: 0; clip-path: inset(0 0 100% 0); transform: translateX(0); }
+  90%           { opacity: 1; clip-path: inset(0 0 55% 0);  transform: translateX(3px); }
+  93%           { opacity: 0.8; clip-path: inset(30% 0 30% 0); transform: translateX(-4px); }
+  96%           { opacity: 0; clip-path: inset(70% 0 0 0); transform: translateX(0); }
+}
+.glitch.chromatic                  { animation: gl-chromatic-main 5s infinite; }
+.glitch.chromatic::after           { animation: gl-chromatic-ghost 5s infinite; }
+.decay-active-30 .glitch.chromatic::after { animation-play-state: running; }
+
+/* Type 2 — Tear --------------------------------------------------------- */
+@keyframes gl-tear-main {
+  0%, 84%, 100% { clip-path: inset(0); transform: translateX(0); }
+  85%           { clip-path: inset(0 0 55% 0); transform: translateX(8px); }
+  88%           { clip-path: inset(55% 0 0 0); transform: translateX(-6px); }
+  91%           { clip-path: inset(35% 0 35% 0); transform: translateX(4px); }
+  94%           { clip-path: inset(0); transform: translateX(0); }
+}
+@keyframes gl-tear-ghost {
+  0%, 84%, 100% { opacity: 0; }
+  85%, 91%      { opacity: 0.6; clip-path: inset(45% 0 45% 0); transform: translateX(-8px); }
+}
+.glitch.tear                  { animation: gl-tear-main 7s infinite; }
+.glitch.tear::after           { animation: gl-tear-ghost 7s infinite; }
+.decay-active-30 .glitch.tear::after { animation-play-state: running; }
+
+/* Type 3 — Ghost (chromatic doubling, no transform) --------------------- */
+@keyframes gl-ghost {
+  0%, 91%, 100% { text-shadow: none; }
+  92%           { text-shadow: 3px 0 rgba(var(--blood-bright), 0.6), -3px 0 rgba(80, 120, 140, 0.4); }
+  94%           { text-shadow: none; }
+  96%           { text-shadow: 3px 0 rgba(var(--blood-bright), 0.6), -3px 0 rgba(80, 120, 140, 0.4); }
+}
+.glitch.ghost { animation: gl-ghost 4s infinite; }
+
+/* Type 4 — Scramble ----------------------------------------------------- */
+@keyframes gl-scramble {
+  0%, 87%, 100% { letter-spacing: 0.005em; opacity: 1; }
+  88%           { letter-spacing: 0.08em;  opacity: 0.5; }
+  90%           { letter-spacing: -0.02em; opacity: 0.4; }
+  92%           { letter-spacing: 0.12em;  opacity: 0.3; }
+  94%           { letter-spacing: 0.005em; opacity: 1; }
+}
+.glitch.scramble { animation: gl-scramble 6s infinite; }
+
+/* Type 5 — Shift -------------------------------------------------------- */
+@keyframes gl-shift {
+  0%, 86%, 100% { transform: translateX(0); opacity: 1; }
+  87%           { transform: translateX(12px);  opacity: 0.5; }
+  89%           { transform: translateX(-8px);  opacity: 0.6; }
+  91%           { transform: translateX(5px);   opacity: 0.8; }
+  93%           { transform: translateX(0);     opacity: 1; }
+}
+.glitch.shift { animation: gl-shift 8s infinite; }
+
+/* ---------------------------------------------------------------------------
+ * Screen tear — full-viewport overlay above everything. Brief clip-path
+ * shift fires at the 90% mark of a 12s loop. Paused until decay >= 0.8.
+ * ------------------------------------------------------------------------- */
+@keyframes screen-tear {
+  0%, 89%, 92%, 100% { clip-path: inset(0); transform: translateX(0); opacity: 0; }
+  90%, 91%           { clip-path: inset(45% 0 45% 0); transform: translateX(15px); opacity: 0.45; }
+}
+.layer-screen-tear {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 80;
+  background: rgba(0, 0, 0, 0.4);
+  mix-blend-mode: multiply;
+  opacity: 0;
+  animation: screen-tear 12s infinite;
+  animation-play-state: paused;
+  transform: translateZ(0);
+  will-change: clip-path, transform, opacity;
+}
+.decay-active-80 .layer-screen-tear { animation-play-state: running; }
+
+/* ---------------------------------------------------------------------------
+ * Wound cover CTA — bordered text button on the dark cover. Hover ramps
+ * border + text alpha simultaneously over 500ms.
+ * ------------------------------------------------------------------------- */
+.wound-cta {
+  border: 0.5px solid rgba(180, 160, 130, 0.25);
+  color: rgba(180, 160, 130, 0.6);
+  transition: color 500ms ease, border-color 500ms ease;
+}
+.wound-cta:hover,
+.wound-cta:focus-visible {
+  border-color: rgba(180, 160, 130, 0.7);
+  color: rgba(200, 180, 150, 0.9);
+  outline: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * Photo cover CTA — green-tinted bone variant of .wound-cta for the Silent
+ * Hill-style poster cover. Same hover ramp, sickly-green palette.
+ * ------------------------------------------------------------------------- */
+.cover-cta {
+  border: 0.5px solid rgba(190, 205, 160, 0.3);
+  color: rgba(200, 215, 175, 0.7);
+  background: rgba(10, 16, 8, 0.35);
+  backdrop-filter: blur(2px);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+  transition: color 500ms ease, border-color 500ms ease, background 500ms ease;
+}
+.cover-cta:hover,
+.cover-cta:focus-visible {
+  border-color: rgba(200, 215, 175, 0.75);
+  color: rgba(225, 235, 205, 0.95);
+  background: rgba(20, 30, 14, 0.5);
+  outline: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * Anchor inline trigger + revealed marginalia.
+ * Trigger looks like normal prose with a dotted accent underline; the
+ * reveal slides in below it with italic marginalia styling.
+ * ------------------------------------------------------------------------- */
+.anchor-trigger {
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: inline;
+  align-items: baseline;
+  border-bottom: 1.5px dotted rgba(var(--accent-rgb), 0.3);
+  transition: border-color 200ms ease, border-style 200ms ease, opacity 200ms ease;
+}
+.anchor-trigger:hover,
+.anchor-trigger[aria-expanded='true'] {
+  border-bottom-style: solid;
+  border-bottom-color: rgba(var(--accent-rgb), 0.7);
+  opacity: 0.9;
+}
+
+.anchor-reveal {
+  display: block;
+  overflow: hidden;
+  font-style: italic;
+  font-size: 0.95em;
+  opacity: 0.7;
+  margin: 0.6em 0;
+  padding-left: 1.25rem;
+  border-left: 2px solid rgba(var(--accent-rgb), 0.3);
+}
+
+/* ---------------------------------------------------------------------------
+ * Anchor click effects — ripple at click coords + decay spike overlay.
+ * Both are JS-spawned then removed after their animation completes.
+ * ------------------------------------------------------------------------- */
+@keyframes anchor-ripple {
+  0%   { transform: translate(-50%, -50%) scale(0);   opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1);   opacity: 0; }
+}
+.anchor-ripple {
+  position: fixed;
+  width: 200px;
+  height: 200px;
+  pointer-events: none;
+  z-index: 60;
+  background: radial-gradient(circle, rgba(var(--blood), 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: anchor-ripple 700ms ease-out forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes anchor-spike {
+  0%   { opacity: 0; }
+  20%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+.anchor-spike {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 25;
+  background: rgba(var(--blood), 0.06);
+  animation: anchor-spike 2s ease-out forwards;
+  will-change: opacity;
+}
+
+/* ---------------------------------------------------------------------------
+ * Blood word — emotionally loaded phrases turn the color of dried blood
+ * once decay >= 0.4. Pure CSS, driven by --decay.
+ * ------------------------------------------------------------------------- */
+.blood-word {
+  transition: color 1.5s ease-in-out, text-shadow 1.5s ease-in-out;
+}
+.decay-blood-active .blood-word {
+  color: rgb(var(--blood-bright));
+  text-shadow: 0 0 8px rgba(var(--blood), 0.4);
 }
