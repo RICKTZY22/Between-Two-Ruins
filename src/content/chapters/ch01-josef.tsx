@@ -328,25 +328,40 @@ function Ch01JosefContent() {
 
       <p>
         He remembered another night too. Reyna sitting up against the pillows, thin and shaking,
-        eyes bright with fever and anger. He had brought the medicine late by twelve minutes because
-        he had fallen asleep sitting on the bathroom floor. Twelve minutes. She looked at him as if
-        he had chosen it. As if the lateness proved something rotten in him.
+        eyes bright with fever and anger. He had brought the medicine late by two minutes because
+        he had fallen asleep sitting on the bathroom floor, still wearing the clothes he had worked
+        in all day. Two minutes. She looked at him as if he had chosen it. As if the lateness proved
+        something rotten in him.
       </p>
 
       <p>
-        <em>&ldquo;You don&rsquo;t care anymore,&rdquo;</em> she had said.
+        <em>
+          &ldquo;Wala ka na bang pakialam sa akin, ha? Gusto mo na ba akong patayin?
+          Hirap na hirap na ako, Josef, tapos ganyan ka pa. Ang hirap sa&rsquo;yo.
+          Ang hina ng utak mo.&rdquo;
+        </em>{' '}
+        she had said.
       </p>
 
       <p>
         Josef had stared at the plastic cup in his hand. The pill rattled once inside it. He wanted
-        to say, <em>I am trying my best.</em> He wanted to say, <em>I have nothing left and I am
-        still giving it to you.</em> He wanted to say, <em>Why do you act like I am the one hurting
-        you?</em> But the words stayed behind his teeth because sick people were allowed to be
-        cruel in a way healthy people were not allowed to answer.
+        to say, <em>Ginagawa ko naman lahat, ha. Pagod na rin ako. Sobra.</em> He wanted to
+        say, <em>Sana nga mawala ka na.</em> He wanted to say, <em>Lahat na lang ng ginagawa ko
+        mali sa&rsquo;yo. Parang ako pa yung dahilan kung bakit hirap na hirap ka.</em> But the
+        words stayed behind his teeth, broken and crowded and ugly, because deep inside, under all
+        the anger, some blurred, rambling part of him kept trying to spell the same unbearable
+        thing:{' '}
+        <span
+          aria-label="he still loves her"
+          style={{ filter: 'blur(6px)', opacity: 0.45, display: 'inline-block' }}
+        >
+          he still loves her
+        </span>
+        .
       </p>
 
       <p>
-        So he said sorry. He always said sorry. It had become the shape of his mouth around her.
+        He just said sorry. He always said sorry. It had become the shape of his mouth around her.
       </p>
 
       <p>
@@ -377,13 +392,13 @@ function Ch01JosefContent() {
 
       <p>
         There were things a man was not supposed to admit, even to himself. That watching her suffer
-        was agony. That caring for her was sometimes worse. That there were nights he stood outside
-        her room in the dark, his hand resting on the door, and did not open it. He told himself it
-        was so she could sleep. He told himself she needed rest. He told himself a dozen soft and
+        was agony. That caring for her was sometimes worse. That there were days in the hospital
+        when visiting hours came and went and he did not go. He told himself she needed rest. He
+        told himself the nurses would call if something changed. He told himself a dozen soft and
         merciful things because the truth was too plain.
       </p>
 
-      <p>Sometimes he did not open the door because he did not want to see her.</p>
+      <p>Sometimes he did not visit because he did not want to see her.</p>
 
       <p>
         This was the part he kept deepest under the cloth. Not because he had stopped being good.
@@ -409,7 +424,7 @@ function Ch01JosefContent() {
         Through the wall, faintly, the soft mechanical rhythm of the oxygen machine.
       </p>
 
-      <p>And beneath it, slower, heavier, the sound of her breathing. Still here. Still his.</p>
+      <p>And beneath it, slower, heavier, the sound of her breathing. Still there. Haunting him.</p>
 
       <hr />
 
