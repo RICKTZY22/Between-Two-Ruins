@@ -327,9 +327,32 @@ function Ch01JosefContent() {
       </p>
 
       <p>
+        He remembered another night too. Reyna sitting up against the pillows, thin and shaking,
+        eyes bright with fever and anger. He had brought the medicine late by twelve minutes because
+        he had fallen asleep sitting on the bathroom floor. Twelve minutes. She looked at him as if
+        he had chosen it. As if the lateness proved something rotten in him.
+      </p>
+
+      <p>
+        <em>&ldquo;You don&rsquo;t care anymore,&rdquo;</em> she had said.
+      </p>
+
+      <p>
+        Josef had stared at the plastic cup in his hand. The pill rattled once inside it. He wanted
+        to say, <em>I am trying my best.</em> He wanted to say, <em>I have nothing left and I am
+        still giving it to you.</em> He wanted to say, <em>Why do you act like I am the one hurting
+        you?</em> But the words stayed behind his teeth because sick people were allowed to be
+        cruel in a way healthy people were not allowed to answer.
+      </p>
+
+      <p>
+        So he said sorry. He always said sorry. It had become the shape of his mouth around her.
+      </p>
+
+      <p>
         He remembered losing his job. Not dramatically. Just quietly, the way things fall apart when
-        you stop being present enough to hold them together. Too many absences. Too many half-days.
-        His supervisor had been kind about it, which almost made it worse.
+        you stop being present enough to hold them together. Too many absences. Too many missed
+        shifts. His supervisor had been kind about it, which almost made it worse.
       </p>
 
       <p>He remembered the last time he had slept a full night. He couldn&rsquo;t.</p>
@@ -339,22 +362,39 @@ function Ch01JosefContent() {
         stopped eating properly, stopped reading, stopped being a person with preferences and habits
         and a life that belonged to him. He had poured all of it into her and she had needed all of
         it and then more. There was a version of him that understood this, that knew the disease was
-        not her fault, that knew the person screaming at him was not really Reyna. And there was
-        another version, smaller and more honest, that was simply exhausted. That had lost things he
-        did not know how to grieve because he was not allowed to grieve them. That had looked at his
-        own body in the mirror one morning and not recognized it. Not because it had changed so
-        much. Because he had stopped caring whether it changed.
+        not her fault, that knew the person screaming at him was sick and terrified and in pain. And
+        there was another version, smaller and more honest, that blamed her anyway. Not for dying.
+        Not for being ill. For looking at him like he had failed her when he was disappearing right
+        in front of her. For making every gentle thing he did feel like another mistake.
+      </p>
+
+      <p>
+        He had lost things he did not know how to grieve because he was not allowed to grieve them.
+        He had looked at his own body in the mirror one morning and not recognized it. Not because
+        it had changed so much. Because he had stopped caring whether it changed. Because the man in
+        the mirror looked like someone waiting for permission to vanish.
       </p>
 
       <p>
         There were things a man was not supposed to admit, even to himself. That watching her suffer
         was agony. That caring for her was sometimes worse. That there were nights he stood outside
         her room in the dark, his hand resting on the door, and did not open it. He told himself it
-        was so she could sleep. This was the part he kept deepest under the cloth. Not because he
-        didn&rsquo;t love her. He did.
+        was so she could sleep. He told himself she needed rest. He told himself a dozen soft and
+        merciful things because the truth was too plain.
       </p>
 
-      <p>He was almost certain he still did.</p>
+      <p>Sometimes he did not open the door because he did not want to see her.</p>
+
+      <p>
+        This was the part he kept deepest under the cloth. Not because he had stopped being good.
+        Because he had stopped loving her in the way a husband was supposed to love his wife. Love
+        had become duty. Duty had become habit. Habit had become a room he entered every morning
+        because someone would die if he did not.
+      </p>
+
+      <p>
+        The thought horrified him. It should have made him cry. Instead it made him tired.
+      </p>
 
       <p>He was not a bad person.</p>
 
@@ -366,13 +406,10 @@ function Ch01JosefContent() {
       </p>
 
       <p>
-        Through the wall, faintly, the soft mechanical rhythm of the oxygen machine in the next
-        room.
+        Through the wall, faintly, the soft mechanical rhythm of the oxygen machine.
       </p>
 
-      <p>He finished his rice.</p>
-
-      <p>He washed the bowl.</p>
+      <p>And beneath it, slower, heavier, the sound of her breathing. Still here. Still his.</p>
 
       <hr />
 
